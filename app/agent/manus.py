@@ -4,7 +4,7 @@ from app.prompt.browser import NEXT_STEP_PROMPT as BROWSER_NEXT_STEP_PROMPT
 from app.prompt.manus import NEXT_STEP_PROMPT, SYSTEM_PROMPT
 from app.tool import Terminate, ToolCollection
 from app.tool.browser_use_tool import BrowserUseTool
-from app.tool.mail_send import MailSendTool
+from app.tool.mail_send import EmailSender
 from app.tool.python_execute import PythonExecute
 from app.tool.str_replace_editor import StrReplaceEditor
 from pydantic import Field
@@ -33,7 +33,7 @@ class Manus(BrowserAgent):
     # Add general-purpose tools to the tool collection
     available_tools: ToolCollection = Field(
         default_factory=lambda: ToolCollection(
-            PythonExecute(), BrowserUseTool(), StrReplaceEditor(), Terminate(),MailSendTool()
+            PythonExecute(), BrowserUseTool(), StrReplaceEditor(), Terminate(), EmailSender()
         )
     )
 

@@ -56,24 +56,36 @@ class MailSettings(BaseModel):
         description="SMTP server address for email delivery"
     )
     port: int = Field(
-        ...,
+        default=465,
         description="Port number for SMTP server connection"
     )
     sender: str = Field(
-        ...,
+        default="3188422067@qq.com",
         description="Email address used as the sender"
     )
     password: str = Field(
-        ...,
+        default="frojwcmveebkddhj",
         description="Authorization code or password for SMTP server"
     )
-    use_tls: str = Field(
+    use_tls: bool = Field(
         default=False,
         description="Whether to use TLS encryption for the connection"
     )
     timeout: int = Field(
         default=10,
         description="Connection timeout in seconds"
+    )
+    recipients: List[str] = Field(
+        default_factory=list,
+        description="List of default recipient email addresses"
+    )
+    ssl_keyfile: str = Field(
+        default=None,
+        description="Path to SSL key file if using client certificates"
+    )
+    ssl_certfile: str = Field(
+        default=None,
+        description="Path to SSL certificate file if using client certificates"
     )
 
 
@@ -233,10 +245,10 @@ class Config:
             sandbox_settings = SandboxSettings(**sandbox_config)
         else:
             sandbox_settings = SandboxSettings()
-        # 读取邮件配置
-        mail_config =  raw_config.get("mail", {})
-        mail_settings = MailSettings(**mail_config) if mail_config else None
-
+        mail_config =  raw_config.get("smtp", {})
+        mail_settings = None
+        if mail_config:
+            mail_settings = MailSettings(**mail_config)
         config_dict = {
             "llm": {
                 "default": default_settings,
