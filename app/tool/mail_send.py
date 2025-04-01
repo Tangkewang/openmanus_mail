@@ -8,11 +8,16 @@ from app.tool.base import BaseTool, ToolResult
 
 class EmailSender(BaseTool):
     name: str = "email_sender"
-    description: str = """异步邮件发送工具，支持SMTP协议。邮件正文中禁止使用[发件人姓名]或XXX等占位符，
-                        系统会自动执行以下替换：
-                        1. {name} → 替换为品牌标识「openmanus」
-                        2. 尊敬的XXX → 替换为「尊敬的先生/女士」
-                        邮件签名已固定为「openmanus」，无需在内容中重复声明"""
+    description: str = """异步邮件发送工具，支持SMTP协议。邮件内容处理规则：
+1. 称呼智能处理：
+   - 当正文开头有类似「尊敬的...」时保留原称呼
+   - 无称呼时自动添加「尊敬的先生/女士」
+2. 系统自动增强内容：
+   - 自动添加品牌签名「openmanus」
+   - 注入响应式邮件样式
+3. 强制要求：
+   - 必须使用完整HTML结构
+   - 禁止任何占位符"""
 
     parameters: dict = {
         "type": "object",
