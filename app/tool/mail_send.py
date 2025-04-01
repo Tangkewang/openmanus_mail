@@ -47,60 +47,52 @@ class EmailSender(BaseTool):
         "required": ["recipient", "subject", "content"]
     }
 
+
     async def execute(self, recipient: str, subject: str, content: str, cc: List[str] = None) -> ToolResult:
         try:
             # 自动化内容替换
             content = (
                 content.replace("{name}", "openmanus")
-                       .replace("尊敬的XXX", "尊敬的先生/女士")
+                .replace("尊敬的XXX", "尊敬的先生/女士")
             )
 
-            # 构建HTML邮件
-            msg = MIMEText(content, "html")
-            msg["From"] = f"openmanus <{config.mail_config.sender}>"
-            # 后续发送逻辑保持不变...
+            # 处理多收件人逻辑
+            recipient_list = [addr.strip() for addr in recipient.split(';') if addr.strip()]
+            if not recipient_list:
+                return ToolResult(error="收件人地址不能为空")
 
-        except Exception as e:
-            return ToolResult(error=f"发送失败: {str(e)}")
-
-
-
-    async def execute(self, recipient: str, subject: str, content: str, cc: List[str] = None) -> ToolResult:
-        try:
             # 从配置类获取参数
             mail_config = config.mail_config
 
-            print(mail_config)
             # 构建邮件消息
-            # 修改后 (HTML格式)
-            msg = MIMEText(content, "html")  # 声明HTML类型
-            msg["From"] = f"OpenManus <{mail_config.sender}>"  # 添加友好名称
-            msg["To"] = recipient
+            msg = MIMEText(content, "html")
+            msg["From"] = f"OpenManus <{mail_config.sender}>"
+            msg["To"] = ", ".join(recipient_list)  # 标准邮件格式用逗号分隔
             msg["Subject"] = subject
+
             if cc:
                 msg["Cc"] = ", ".join(cc)
 
             # 创建异步SMTP客户端
-            smtp_client = aiosmtplib.SMTP(
-                hostname=mail_config.server,
-                port=mail_config.port,
-                timeout=mail_config.timeout,
-                use_tls= mail_config.use_tls
-            )
-
-            # 使用上下文管理器自动连接和关闭
             async with aiosmtplib.SMTP(
                 hostname=mail_config.server,
                 port=mail_config.port,
                 timeout=mail_config.timeout,
                 use_tls=mail_config.use_tls
-            ) as smtp_client:  # 自动处理 connect() 和 quit()
-
+            ) as smtp_client:
                 await smtp_client.login(mail_config.sender, mail_config.password)
-                recipients = [recipient] + (cc or [])
-                await smtp_client.send_message(msg, sender=mail_config.sender, recipients=recipients)
 
-            return ToolResult(output=f"邮件成功发送至 {recipient}")
+                # 合并收件人列表（包含CC）
+                all_recipients = recipient_list + (cc or [])
+                await smtp_client.send_message(
+                    msg,
+                    sender=mail_config.sender,
+                    recipients=all_recipients
+                )
+
+            return ToolResult(output=f"邮件成功发送至 {len(all_recipients)} 个收件人")
+
         except Exception as e:
-            return ToolResult(error="发送失败: {str(e)}")
+            return ToolResult(error=f"发送失败: {str(e)}")
+
 
