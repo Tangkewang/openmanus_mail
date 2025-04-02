@@ -12,7 +12,7 @@ Our team members [@Kewang Tang](https://github.com/Tangkewang) and [@xiong Gu](h
 
 ## Project Demo
 
-<video src="https://github.com/Tangkewang/openmanus_mail/blob/main/assets/video.mp4" 
+<video src="https://github.com/user-attachments/assets/cadbd1d8-75c1-4f91-93e1-f9cea02bc359" 
        controls 
        muted 
        class="d-block rounded-bottom-2 border-top width-fit" 
