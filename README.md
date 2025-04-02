@@ -12,7 +12,13 @@ Our team members [@Kewang Tang](https://github.com/Tangkewang) and [@xiong Gu](h
 
 ## Project Demo
 
-<video src="assets/video.mp4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px"></video>
+<video src="assets/video.mp4" 
+       controls 
+       muted 
+       class="d-block rounded-bottom-2 border-top width-fit" 
+       style="max-height:640px; min-height: 200px">
+</video>
+
 
 ## Installation
 
