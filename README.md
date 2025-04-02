@@ -7,7 +7,7 @@
 
 Manus is incredible, but OpenManus can achieve any idea without an *Invite Code* 🛫!
 
-Our team members [@Kewang Tang](https://github.com/Tangkewang) and [@xiong Gu](https://github.com/galahies)
+Our team members [@Kewang Tang](https://github.com/Tangkewang) and [@xiong Gu](https://github.com/galahies)and[@Yiwei Xiu](https://github.com/anatsicc)
 
 
 ## Project Demo
